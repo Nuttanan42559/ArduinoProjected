@@ -1,0 +1,44 @@
+#define outputA 6
+#define outputB 7
+int counter = 0; 
+int aState;
+int aLastState; 
+ 
+void setup() { 
+   pinMode (outputA,INPUT);
+   pinMode (outputB,INPUT);
+   
+   Serial.begin (9600);
+   // Reads the initial state of the outputA
+   aLastState = digitalRead(outputA);   
+ } 
+ 
+void loop() { 
+   aState = digitalRead(outputA); // Reads the "current" state of the outputA
+   // If the previous and the current state of the outputA are different, that means a Pulse has occured
+   if (aState != aLastState){     
+     // If the outputB state is different to the outputA state, that means the encoder is rotating clockwise
+     if (digitalRead(outputB) != aState) { 
+       counter ++;
+     } else {
+       counter --;
+     }
+     Serial.print("Position: ");
+     Serial.println(counter);
+     
+   } 
+   aLastState = aState; // Updates the previous state of the outputA with the current state
+   setColor(255, 0, 0);
+   delay(counter + 100);
+   setColor(0, 255, 0);
+   delay(counter + 100);
+   setColor(0, 0, 255);
+   delay(counter + 100);
+   
+}
+
+void setColor(int redValue, int greenValue, int blueValue) {
+  analogWrite(2, redValue);
+  analogWrite(3, greenValue);
+  analogWrite(1, blueValue);
+}
